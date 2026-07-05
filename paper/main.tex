@@ -502,7 +502,7 @@ the wrong object. As a positive control, on a \emph{trained} query type the same
 every route showing substantially greater causal dependence on the queried slot ($0.67$--$1.00$)
 than on the unqueried one ($\approx 0.25$). What the intervention adds over the probe is real but bounded: it rules out
 ``decodable-but-causally-inert'' and shows the output functionally depends on the wrong slot under
-input intervention, with the answer-representation intact. It identifies the functional readout the converged model uses: it
+input intervention, with the answer-representation intact. It identifies the functional input dependence of the converged output: it
 reuses the readout for the trained shape slot rather than the held-out one (holding out ``shape of
 left'' instead flips which slot is read). The claim is the intact-representation-but-wrong-slot-dependence
 dissociation, not the direction of the error.
@@ -585,13 +585,14 @@ code---readability, not input dimension, drives the deficit.
 Shared-projection code ($d{=}16$, injective) & \multicolumn{4}{c}{decreasing readability $\rightarrow$}\\
 Raw linear decodability & $0.95$ & $0.82$ & $0.76$ & $0.53$\\
 \midrule
-Few-shot binding accuracy, $f{=}0.1$ & $0.57$ & $0.48$ & $0.47$ & $0.32$\\
-Few-shot binding accuracy, $f{=}0.2$ & $0.93$ & $0.67$ & $0.57$ & $0.34$\\
+Few-shot binding accuracy, $f{=}0.1$ & $0.57_{[.49,.65]}$ & $0.48_{[.46,.51]}$ & $0.47_{[.44,.49]}$ & $0.32_{[.28,.35]}$\\
+Few-shot binding accuracy, $f{=}0.2$ & $0.93_{[.89,.96]}$ & $0.67_{[.64,.70]}$ & $0.57_{[.52,.62]}$ & $0.34_{[.31,.37]}$\\
 \bottomrule
 \end{tabular}
 \caption{Graded readability sweep at \emph{fixed} input dimension ($d{=}16$, shared projection, all
-four codes injective with exact ceiling $1.0$; $n{=}10$, chance $0.25$). Few-shot binding decreases
-monotonically with raw linear decodability (Spearman $\rho{=}1.0$ at both doses), so the
+four codes injective with exact ceiling $1.0$; $n{=}10$, chance $0.25$; subscripts are $95\%$
+bootstrap CIs). Few-shot binding decreases monotonically with raw linear decodability (Spearman
+$\rho{=}1.0$ at both doses), so the
 strong-entangled deficit is a graded function of readability, not an artifact of a single
 adversarially-unreadable code or of input dimension.}
 \label{tab:readsweep}
@@ -652,8 +653,8 @@ $-0.15/-0.47$. The readable-route advantages are same-signed across the doses th
 ($f\ge0.05$; near $f{=}0.02$ both routes sit at $\Delta\approx0$), whereas the strong-entangled
 deficit \emph{grows} with dose as the readable routes climb and it saturates. The ordering: shared
 readable pathways $>$ modular readable oracle $\gg$ shared low-readability code, replicated on a
-fresh held-out query type (symbolic directionally, $p=0.053$) and in a three-object world
-(\S\ref{sec:fewshot}, ``larger world'').}
+fresh held-out query type (symbolic directionally, $p=0.053$) and corroborated in a three-object
+stress check (\S\ref{sec:fewshot}, ``larger world'').}
 \label{tab:fewshot}
 \end{table}
 
@@ -707,8 +708,8 @@ untested cell. Our causal test intervenes on the input (a clean but coarse handl
 readout-swap or activation-patching evidence would localize this dependence to an internal readout. The symbolic
 route's fixed description order permits absolute-position shortcuts (its binding may be easier than
 free-order text). Few-shot leakage varies which examples leak by seed but not the schedule. The
-two-factor account's core (sharing, readability) replicated on a second held-out type and a
-three-object world, but the weak-perceptual/oracle ranking did not carry over and both held-out
+two-factor account's core (sharing, readability) replicated on a second held-out type and was
+corroborated in a three-object stress check, but the weak-perceptual/oracle ranking did not carry over and both held-out
 types query shape---attribute- and modality-general replication is future work. Finally, the
 confirmatory arm fixed predictions and configurations before running, but exploration and
 confirmation were performed by the same authors on the same testbed.
@@ -852,10 +853,10 @@ $d{=}8$ code's $0.58$), an injective code verified over all $256$ states. On the
 ($n{=}10$), its pooled few-shot deficit versus the $d{=}16$ readable weak-perceptual route is
 $-0.294$ ($p=0.002$), and it sits at or below the $d{=}8$ strong code ($-0.105$), so the deficit
 tracks readability rather than input dimension. \emph{Graded readability sweep} (\S\ref{sec:fewshot}):
-four shared-projection $d{=}16$ codes at raw linear decodability $\{0.95, 0.82, 0.76, 0.53\}$ give
-few-shot accuracy $\{0.57, 0.48, 0.47, 0.32\}$ at $f{=}0.1$ and $\{0.93, 0.67, 0.57, 0.34\}$ at
-$f{=}0.2$ ($n{=}10$; Spearman $\rho{=}1.0$ at both doses), so few-shot binding is monotone in
-readability at fixed dimension. A capacity sweep of the MLP decoder
+four shared-projection $d{=}16$ codes (all injective, exact ceiling $1.0$) at raw linear decodability
+$\{0.95, 0.82, 0.76, 0.53\}$ give few-shot accuracy $\{0.57, 0.48, 0.47, 0.32\}$ at $f{=}0.1$ and
+$\{0.93, 0.67, 0.57, 0.34\}$ at $f{=}0.2$ ($n{=}10$; Spearman $\rho{=}1.0$ at both doses), so few-shot
+binding is monotone in readability at fixed dimension. A capacity sweep of the MLP decoder
 ($(64,64)\to(256,256)\to(128,128,128)$) does not improve recovery of the strong code
 ($0.56\to0.55\to0.54$). Full per-seed values are in the released manifests.
 
