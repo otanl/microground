@@ -43,17 +43,18 @@ We report four findings. (1)~\emph{Endpoint invariance:} on held-out binding que
 route yields converged zero-shot composition---each ends at or below chance despite an exact Bayes
 ceiling of $1.0$, so within our bounded sweep (a ${\sim}25\times$ parameter increase,
 a $10\times$ learning-rate range, weight decay, and longer training) the failure is one of
-inductive bias, not information. (A parallel transition-holdout diagnostic shows the same
+inductive bias, not information. (A secondary transition-holdout diagnostic shows the same
 memorization pattern; we treat it as weaker evidence, as the tiny world may not reward the rule.)
 (2)~\emph{A two-factor account of few-shot binding:} when a small fraction of the held-out query
-type is leaked into training, sample efficiency (in this testbed) is governed by
+type is leaked into training, sample efficiency (in this testbed) is best explained by
 (i)~\emph{input-pathway parameter sharing} (a shared projection transfers to unseen query types;
-per-factor embedding tables do not) and (ii)~\emph{readability} of the code (an entangled code that
-probes cannot decode, raw linear decodability $0.95 \to 0.58$, is worse than every readable
-alternative). Two parameter-matched pairwise dissociations (a three-cell partial factorial) separate
-the factors; the two core effects (sharing helps, unreadability hurts) replicate across two held-out
-query types at 20 seeds and in a larger three-object world, while the weak-perceptual edge over the
-oracle is testbed-specific. Notably, the clean per-factor oracle is not the most sample-efficient
+per-factor embedding tables do not) and (ii)~\emph{readability} of the code (a poorly readable
+entangled code, whose raw linear decodability drops $0.95 \to 0.58$, has the worst pooled few-shot
+performance and saturates far below the readable alternatives; a dimension-matched control isolates
+readability from input dimension). Two parameter-controlled pairwise dissociations (a three-cell
+partial factorial) separate the factors; the two core effects (sharing helps, low readability hurts)
+replicate across two held-out shape query types at 20 seeds and in a larger three-object world,
+while the weak-perceptual edge over the oracle is testbed-specific. Notably, the clean per-factor oracle is not the most sample-efficient
 readable route; shared readable pathways transfer better.
 (3)~\emph{A double dissociation:} early in training, distributed codes---but not index-like
 codes---pass through a transient phase of above-chance zero-shot transfer before collapsing into
@@ -102,7 +103,7 @@ the leave-region-out diagnostic of \citet{hu2024case}.
 
 An initially plausible hypothesis---that entangled, grounded-like routes encourage compositional
 structure---is falsified here by a strong-entangled control (an entangled perceptual code that
-defeats linear decoding), replicated across two held-out query types. What the controls isolate
+defeats linear decoding), replicated across two held-out shape query types. What the controls isolate
 instead is a mechanistic account of \emph{which properties of an input pathway matter, for what, and
 why}, together with an unusually well-controlled negative result about zero-shot
 compositionality at this scale.
@@ -123,9 +124,9 @@ informative routes fall below even the \emph{blind} majority ceiling. (We read t
 \emph{binding}, where the held-out parts are all present; for the transition task the same wording
 is weaker---the world may be too small to reward the rule---so we scope that claim in \S\ref{sec:endpoint}.)
 \item \textbf{A two-factor account of few-shot binding} (\S\ref{sec:fewshot}): sample efficiency is
-governed by input-pathway parameter sharing and readability; two parameter-matched pairwise
-dissociations (a three-cell partial factorial) separate them; the clean per-factor oracle is not
-the most sample-efficient readable route; replicated across two held-out query types at 20 seeds and a three-object
+best explained by input-pathway parameter sharing and readability; two parameter-controlled pairwise
+dissociations (one exactly, one nearly parameter-matched) separate them; the clean per-factor oracle
+is not the most sample-efficient readable route; replicated across two held-out shape query types at 20 seeds and a three-object
 world, and robust to the description order and to the specific synthetic mix.
 \item \textbf{A double dissociation} (\S\ref{sec:dynamics}): transient zero-shot transfer early in
 training tracks code format (distributed vs.\ index-like); few-shot efficiency tracks pathway
@@ -203,8 +204,9 @@ motivate the operational question without settling it.
 shape, position, size) of cardinalities $(4,4,4,2)$: $128$ states. The two-object world places two
 objects in fixed positional roles (left, right), each with a colour and a shape: $4^4 = 256$
 states. Both worlds are enumerated in full; every evaluation below is over the \emph{entire}
-relevant query space, so reported accuracies carry zero sampling variance and the only variance
-source is model initialization.
+relevant query space, so for a fixed split and trained model, evaluation has zero sampling variance;
+across the reported runs, variance comes from model initialization and, where applicable, the split
+or leakage seed.
 
 \paragraph{Tasks.} \emph{Attribute} (report a queried factor; a lookup used as a sanity ceiling),
 \emph{counterfactual} (report the successor $(v{+}1) \bmod k$ of a queried factor), and
@@ -277,8 +279,9 @@ and figures re-aggregate without retraining.
 Two scope notes on the statistics. \emph{Interpreting null endpoint differences.} The endpoint-invariance
 and no-transition-difference claims are acceptances of the null; we read them as bounded (``no knob
 in this box''), and note that the same $n$ that detected the $+0.05$--$0.08$ few-shot route effects
-(Table~\ref{tab:fewshot}) would have detected zero-shot route differences of that size, so any
-undetected route effect on the endpoint is smaller than the few-shot effects we do report.
+(Table~\ref{tab:fewshot}) are larger than the paired zero-shot route-difference confidence
+intervals; we therefore treat endpoint invariance as a bounded empirical observation, not a formal
+equivalence claim.
 \emph{The mechanism arms use $n{=}10$}; their effect sizes are large ($|\delta|\ge0.6$, $p<10^{-3}$)
 and the one place a small effect mattered---the k-shot ordering---is exactly where our $10\to20$-seed
 firm-up caught and shrank it, so we trust the large mechanism effects at $n{=}10$ while reporting the
@@ -408,7 +411,9 @@ shared-feature regime that larger ones skip.
 \includegraphics[width=0.98\textwidth]{figs/bind_holdout_route_dynamics.png}
 \caption{Training dynamics by route on the held-out binding type ($n{=}20$ seeds; bands are
 bootstrap 95\% CIs; every point is an exhaustive evaluation). Left: held-out (never-trained) query
-type; distributed codes (blue/green/red) pass through a transient above-chance phase and collapse;
+type; the token and weak-perceptual distributed codes (blue/green) pass through a transient
+above-chance phase and collapse (the hard-perceptual route, red, collapses comparably but its peak
+CI overlaps chance);
 index-like codes (orange/purple) and floors never rise above chance. Right: all-space accuracy (train
 proxy) shows all informative routes memorize the trained types.}
 \label{fig:dynamics}
@@ -477,8 +482,8 @@ the held-out ``shape of right'' query, varying the correct (right) slot leaves t
 unchanged (all routes $0.15$--$0.24$, i.e.\ chance), while varying the wrong (left) slot moves it
 strongly (index routes $0.71$--$0.86$; symbolic $0.51$)---the converged output causally reads the
 wrong object. As a positive control, on a \emph{trained} query type the same intervention shows
-every route causally tracking the \emph{correct} slot ($0.67$--$1.00$) and ignoring the other
-($\approx 0.25$). What the intervention adds over the probe is real but bounded: it rules out
+every route showing substantially greater causal dependence on the queried slot ($0.67$--$1.00$)
+than on the unqueried one ($\approx 0.25$). What the intervention adds over the probe is real but bounded: it rules out
 ``decodable-but-causally-inert'' and shows the readout is functionally wired to the wrong slot with
 the answer-representation intact. It identifies the functional readout the converged model uses: it
 reuses the readout for the trained shape slot rather than the held-out one (holding out ``shape of
@@ -534,12 +539,22 @@ vs.\ the oracle $-0.090$, $p = 3.8\times10^{-6}$ (exploratory) and $-0.112$, $p 
 decoder recovers its factors at only $0.56$ from the enumerated states (vs.\ $0.95$/$0.98$ linear/MLP
 for the weak code), so the $d{=}8$ saturating mix is \emph{practically} unreadable, not just
 linearly so, and the trained model's residual readability ($0.59$) sits near this decoder ceiling
-($0.56$--$0.58$). We therefore state a narrower conclusion: a code that no probe (linear or
-MLP) can decode is the code the model binds through worst, and the model never reads a code better
+($0.56$--$0.58$). We therefore state a narrower conclusion: a code decoded only weakly by our linear
+and MLP probes is the code the model binds through worst, and the model never reads a code better
 than a generic decoder does. We do \emph{not} claim ``linear readability gates binding even when
 information is nonlinearly recoverable''---the decisive high-information, linearly-unreadable,
-MLP-recoverable cell is not one we could construct with a fixed tanh mix (compression that killed
-linear readability also killed information), and building it is open work.
+MLP-recoverable cell is not one we could construct with a fixed tanh mix (the compression that
+reduced linear readability also reduced recoverability by our MLP decoder), and building it is open
+work.
+
+\paragraph{Readability, not input dimension.} The strong route is lower-dimensional ($d{=}8$) than
+the readable routes ($d{=}16$), raising the confound that its few-shot deficit reflects input
+dimension rather than readability. A dimension-matched control rules this out: a $d{=}16$ entangled
+code (higher gain and depth) that is injective (exact ceiling $1.0$) yet poorly readable (raw linear
+$0.57$, matching the $d{=}8$ code's $0.58$). At matched dimension, removing readability collapses
+few-shot binding---this $d{=}16$ poorly-readable code pools $-0.294$ ($p=0.002$, $n{=}10$) below the
+$d{=}16$ readable code and, if anything, sits slightly below the $d{=}8$ strong code
+($-0.105$)---so readability, not input dimension, drives the deficit.
 
 \paragraph{Pathway sharing, dissociated.} Among readable routes, the surprise is that the cleanest
 code loses: the per-factor oracle is the \emph{least} sample-efficient. Two properties could
@@ -736,6 +751,33 @@ chance $0.333$). Pooled vs.\ oracle: one-hot $+0.066$ ($p{=}0.037$); strong-enta
 ($p{=}0.002$); weak-perceptual $-0.001$ ($p{=}0.77$, non-replicating).}
 \label{tab:bind3}
 \end{table}
+
+\section{Training and Probing Details}
+\label{app:training}
+\paragraph{Model.} A pre-norm decoder-only transformer: token embedding plus a fixed sinusoidal
+positional embedding, $L$ blocks (multi-head self-attention with a causal mask, $4$ heads; a
+two-layer GELU MLP of width $2\times$ hidden), a final LayerNorm, and a linear token head over the
+vocabulary read at the last position. Default hidden size $24$, $L{=}1$ ($L{=}2$ in the capacity
+arm); ${\sim}6$K parameters (Table~\ref{tab:spec}). When a state channel is present, its embedding
+(a sum of per-factor index embeddings, or a linear projection of the real-valued code) is added to
+\emph{every} token position.
+\paragraph{Optimization.} AdamW ($\beta=(0.9, 0.999)$; weight decay $0.01$ except in the
+weight-decay arm), learning rate $10^{-3}$ (except the LR arm), full-shuffle minibatches of size
+$32$, cross-entropy on the final-token logits against the single answer token. Epochs: $500$
+(binding), $1000$ (counterfactual), $4000$ (weight-decay arm); the exhaustive query set is evaluated
+every $5$ epochs, and the primary metric averages the last $10\%$ of evaluations. Seeds set torch,
+numpy, and the shuffle generator; initialization and split seeds are separated.
+\paragraph{Splits.} Random splits partition the $128$/$256$ states $80/20$ by a split seed. The
+binding holdout removes one of the four (position, attribute) query types entirely; its $k$-shot
+variant leaks a uniformly random fraction $f$ of that type's states back into training (seeded). The
+transition holdout removes a uniformly random $30\%$ of (factor, source-value) successor transitions.
+\paragraph{Probes.} Linear probes are 5-fold stratified-CV logistic regression
+(\texttt{max\_iter}$=2000$) on the final-token residual; the control task \citep{hewitt2019designing}
+fits the same probe to fixed random labels with matched class counts, and we report selectivity
+$=$ probe $-$ control. The nonlinear decoder is an MLP (\texttt{hidden}$=(64,64)$,
+\texttt{max\_iter}$=2000$) under the same protocol; widening it to $(256,256)$ or deepening to
+$(128,128,128)$ did not improve recovery of the strong code ($0.56 \to 0.55 \to 0.54$). ``Raw
+decodability'' applies the same probes to the raw state input rather than the residual.
 
 \section{Additional Robustness Detail}
 \label{app:robust}

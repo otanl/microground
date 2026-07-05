@@ -139,6 +139,7 @@ STATE_MODE = {
     "scrambled": "index",
     "perceptual": "perceptual",
     "perceptual_hard": "perceptual",
+    "perceptual_hard16": "perceptual",
     "perceptual_b": "perceptual",
     "perceptual_c": "perceptual",
     "perceptual_hard_b": "perceptual",
@@ -164,6 +165,7 @@ CONDITIONS: Dict[str, Condition] = {
     "state_factored":    Condition("state_factored",    show_description=False, encoder_name="factored"),
     "state_perceptual":  Condition("state_perceptual",  show_description=False, encoder_name="perceptual"),
     "state_perceptual_hard": Condition("state_perceptual_hard", show_description=False, encoder_name="perceptual_hard"),
+    "state_perceptual_hard16": Condition("state_perceptual_hard16", show_description=False, encoder_name="perceptual_hard16"),
     "state_onehot_shared": Condition("state_onehot_shared", show_description=False, encoder_name="onehot"),
     # alternative mix instantiations (robustness to the fixed synthetic map, not a single draw)
     "state_perceptual_b": Condition("state_perceptual_b", show_description=False, encoder_name="perceptual_b"),
@@ -189,6 +191,9 @@ def make_encoder(name: str, world: FactoredWorld) -> StateEncoder:
         return PerceptualState(world)                                   # weak (audited)
     if name == "perceptual_hard":
         return PerceptualState(world, dim=8, gain=2.5, depth=3, seed=PERCEPT_SEED + 1)  # strong
+    if name == "perceptual_hard16":
+        # dimension-matched to weak (d=16) but poorly readable -> isolates readability from dim
+        return PerceptualState(world, dim=16, gain=4.0, depth=4, seed=PERCEPT_SEED + 2)
     if name == "perceptual_b":
         return PerceptualState(world, seed=PERCEPT_SEED + 10)
     if name == "perceptual_c":
