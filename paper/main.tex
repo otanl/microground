@@ -660,8 +660,9 @@ beyond clarifying methodology for grounding and interpretability claims.
 Evaluation is exhaustive (no test-set sampling); all runs are logged to JSONL manifests recording
 configs, seeds, and full trajectories; every table and figure re-aggregates from those manifests
 without retraining, via the scripts we provide. The anonymized code, manifests, per-seed logs, and
-exact commands are included in the supplementary material and will be publicly released upon
-acceptance. Table~\ref{tab:spec} is the one-page experimental specification (routes, dimensions,
+exact commands are available at \url{https://anonymous.4open.science/r/microground-F3BD/} (also
+included in the supplementary material); the repository will be de-anonymized and publicly released
+upon acceptance. Table~\ref{tab:spec} is the one-page experimental specification (routes, dimensions,
 trainable parameters, raw decodability, exact Bayes ceiling, and train/in-distribution/held-out
 accuracy). Determinism caveat: runs are CPU-deterministic given the recorded seeds up to library
 versioning, which we record.
@@ -693,6 +694,7 @@ informative route's exact Bayes ceiling is $1.0$; every route memorizes the trai
 
 \begin{table}[h]
 \centering\small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccccc}
 \toprule
 Route & Params & State dim & Raw lin.\ dec. & Bayes ceiling & Trained-type & All-space & Held-out\\
@@ -703,7 +705,7 @@ Route & Params & State dim & Raw lin.\ dec. & Bayes ceiling & Trained-type & All
 \texttt{state\_perceptual} & 6144 & 16 & 0.95 & 1.000 & ${\approx}1.0$ & 0.81 & 0.224\\
 \texttt{state\_perceptual\_hard} & 5952 & 8 & 0.58 & 1.000 & ${\approx}0.9$ & 0.70 & 0.146\\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{One-page experimental specification (binding holdout, $n{=}20$). ``Trained-type'' is
 accuracy on the three query types seen in training (memorized, ${\approx}1.0$; strong-entangled
 ${\approx}0.9$, still fitting); ``All-space'' is balanced accuracy over all four types
