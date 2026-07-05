@@ -41,12 +41,12 @@ the informative input channels are matched in the sense that each uniquely deter
 paired nonparametric tests (robustness arms use 5--20).
 We report four findings. (1)~\emph{Endpoint invariance:} on held-out binding queries no informative
 route yields converged zero-shot composition---each ends at or below chance despite an exact Bayes
-ceiling of $1.0$, so within our bounded sweep (a ${\sim}25\times$ parameter increase,
-a $10\times$ learning-rate range, weight decay, and longer training) the failure is one of
-inductive bias, not information. (A secondary transition-holdout diagnostic shows the same
-memorization pattern; we treat it as weaker evidence, as the tiny world may not reward the rule.)
+ceiling of $1.0$, so within our bounded sweep (a ${\sim}25\times$ parameter increase, a $10\times$
+learning-rate range, weight decay, and longer training) all routes converge to lookup-like solutions
+despite information-sufficient inputs. (The ceiling certifies that the input determines the answer,
+not that the held-out mapping is identifiable from a training objective for which lookup suffices.)
 (2)~\emph{A two-factor account of few-shot binding:} when a small fraction of the held-out query
-type is leaked into training, sample efficiency (in this testbed) is best explained by
+type is leaked into training, within the tested cells sample efficiency is best predicted by
 (i)~\emph{input-pathway parameter sharing} (a shared projection transfers to unseen query types;
 per-factor embedding tables do not) and (ii)~\emph{readability} of the code (a poorly readable
 entangled code, whose raw linear decodability drops $0.95 \to 0.58$, has the worst pooled few-shot
@@ -89,7 +89,10 @@ transformers) that we can evaluate every model on the \emph{entire} query space,
 Bayes-optimal ceilings per route, and probe every checkpoint. This trades scale for a property
 larger studies cannot have: when a model fails, we can say \emph{exactly} whether the information
 was absent, present-but-unread, or present-but-unusable, and when two routes differ, no sampling
-noise or information mismatch can explain the difference.
+noise or information mismatch can explain the difference. We therefore study \emph{information-matched
+input encodings and pathways}, not grounding in the rich sense: the ``perceptual'' routes are fixed
+synthetic codes of enumerated categorical states, and grounding is a motivating question, not a
+claim we test.
 
 Our target phenomenon is \emph{compositional binding}: answering ``shape of right'' requires
 binding the queried attribute to the correct object slot \citep{greff2020binding,feng2024how}. We
@@ -116,16 +119,18 @@ statistical protocol (converged-accuracy metric, 5--20 seeds with 10--20 for all
 comparisons, paired Wilcoxon with Holm--Bonferroni, bootstrap CIs, effect sizes) under an explicit
 exploratory/confirmatory split.
 \item \textbf{Endpoint invariance} (\S\ref{sec:endpoint}): no informative route achieves converged
-zero-shot compositional binding or transition generalization; robust to capacity, weight decay, and
-training length; all failures occur strictly below a ceiling of $1.0$, and on transitions all
-informative routes fall below even the \emph{blind} majority ceiling. (We read this as an inductive-bias limit for
-\emph{binding}, where the held-out parts are all present; for the transition task the same wording
-is weaker---the world may be too small to reward the rule---so we scope that claim in \S\ref{sec:endpoint}.)
-\item \textbf{A two-factor account of few-shot binding} (\S\ref{sec:fewshot}): sample efficiency is
-best explained by input-pathway parameter sharing and readability; two parameter-controlled pairwise
-dissociations (one exactly, one nearly parameter-matched) separate them; the clean per-factor oracle
-is not the most sample-efficient readable route; replicated across two held-out shape query types at 20 seeds and a three-object
-world, and robust to the description order and to the specific synthetic mix.
+zero-shot compositional binding; robust to capacity, weight decay, and training length; all failures
+occur strictly below a ceiling of $1.0$, so the inputs are information-sufficient while the held-out
+mapping is not identifiable from a training objective for which lookup suffices. (A transition-holdout
+diagnostic shows the same memorization pattern; we treat it as weaker supporting evidence, as the
+tiny world may not reward the rule.)
+\item \textbf{A two-factor account of few-shot binding} (\S\ref{sec:fewshot}): within the tested
+cells, two pairwise dissociations point to input-pathway parameter sharing and practical readability
+as the dominant predictors of sample efficiency (a three-cell partial factorial, not a full
+interaction estimate); the clean per-factor oracle is not the most sample-efficient readable route;
+the effects replicate across two held-out shape query types at 20 seeds and in a larger three-object
+world, and are robust to description order, synthetic mix, and---for readability---a dimension-matched
+control.
 \item \textbf{A double dissociation} (\S\ref{sec:dynamics}): transient zero-shot transfer early in
 training tracks code format (distributed vs.\ index-like); few-shot efficiency tracks pathway
 sharing. Exhaustive evaluation makes the transient a measured behavioral state, not noise.
@@ -566,7 +571,11 @@ nearly matched, Table~\ref{tab:routes}, so this---not oracle-vs-onehot---is the 
 control). Result: it behaves like the shared routes, not like the oracle (Table~\ref{tab:fewshot}).
 The fourth factorial cell (a distributed code through a \emph{modular} pathway) has no natural
 construction---a per-factor index code is readable by definition---so this is a three-cell partial
-factorial supporting two pairwise dissociations, not a full interaction estimate. Pooled over doses, one-hot-shared beats the
+factorial supporting two pairwise dissociations, not a full interaction estimate. Explicitly, each
+dissociation varies one factor while holding the other: \textbf{oracle vs.\ one-hot-shared} (both
+index-readable, differing in sharing) isolates \emph{pathway sharing}, while \textbf{weak- vs.\
+strong-perceptual}, together with the dimension-matched control (all shared-projection, differing in
+readability), isolates \emph{readability}. Pooled over doses, one-hot-shared beats the
 oracle by $+0.057$ ($p = 0.0020$) exploratory and $+0.062$ ($p = 1.1\times10^{-4}$) confirmatory,
 and is statistically indistinguishable from weak-perceptual ($p = 0.52$ / $p = 0.083$). Code format
 did not explain the few-shot differences among the readable codes we tested;
@@ -596,10 +605,19 @@ Route vs.\ oracle & pooled $\Delta$ & $p$ & pooled $\Delta$ & $p$\\
 one-hot vs.\ weak-perceptual & $+0.004$ & $0.52$ & $-0.022$ & $0.083$\\
 \bottomrule
 \end{tabular}
-\caption{Few-shot binding, pooled advantage over the factored oracle (mean over doses per seed;
-Wilcoxon vs.\ 0; $n{=}20$). The two-factor account: shared readable pathways $>$ modular readable
-oracle $\gg$ shared low-readability code, replicated on a fresh held-out query type (the symbolic route
-directionally, $p = 0.053$) and in a three-object world (\S\ref{sec:fewshot}, ``larger world'').}
+\caption{Few-shot binding, pooled advantage over the factored oracle. \emph{Pooled} $\Delta$ is the
+per-seed mean of (route $-$ oracle) balanced accuracy across the four doses
+$f\in\{0.02,0.05,0.1,0.2\}$; $p$ is a paired Wilcoxon signed-rank test of the per-seed pooled
+$\Delta$ against $0$ ($n{=}20$), reported per comparison. All four route-vs-oracle comparisons
+survive Holm--Bonferroni within the family (exploratory adjusted $p\le0.027$; confirmatory adjusted
+$p\le0.053$, the symbolic route directional). Pooled Cliff's $\delta$ (exploratory\,/\,confirmatory):
+one-hot $0.33/0.38$, weak-perceptual $0.38/0.55$, symbolic $0.33/0.20$, strong-entangled
+$-0.15/-0.47$. The readable-route advantages are same-signed across the doses that carry signal
+($f\ge0.05$; near $f{=}0.02$ both routes sit at $\Delta\approx0$), whereas the strong-entangled
+deficit \emph{grows} with dose as the readable routes climb and it saturates. The ordering: shared
+readable pathways $>$ modular readable oracle $\gg$ shared low-readability code, replicated on a
+fresh held-out query type (symbolic directionally, $p=0.053$) and in a three-object world
+(\S\ref{sec:fewshot}, ``larger world'').}
 \label{tab:fewshot}
 \end{table}
 
@@ -662,7 +680,7 @@ confirmation were performed by the same authors on the same testbed.
 \paragraph{Future work.} Freeing description order to force genuine symbolic binding; scaling the
 world (more objects/factors) to put compositional pressure on the lookup solution; a learned
 perception module (trading the fixed-mix control for adaptivity); and testing whether the
-two-factor law predicts adapter- and prompt-style transfer in large models, where ``shared versus
+two-factor account predicts adapter- and prompt-style transfer in large models, where ``shared versus
 modular input pathways'' has direct analogues.
 
 \subsubsection*{Broader Impact Statement}
