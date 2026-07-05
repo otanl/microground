@@ -65,9 +65,7 @@ efficiency tracks pathway \emph{sharing}. (4)~\emph{Failure anatomy:} the symbol
 mis-binding}---the answer stays decodable in the residual, yet a direct input intervention shows
 the converged output causally tracks the \emph{wrong} object slot and ignores the correct one---and
 the entangled route inherits, rather than improves on, the readability of its input.
-We also report, and replicate, the falsification of our own initial hypothesis that a grounded
-side-channel induces compositional structure. All code, manifests, and per-seed logs will be released
-for exact reproduction.
+All code, manifests, and per-seed logs are available anonymously for exact reproduction.
 \end{abstract}
 
 \section{Introduction}
@@ -278,9 +276,9 @@ and figures re-aggregate without retraining.
 
 Two scope notes on the statistics. \emph{Interpreting null endpoint differences.} The endpoint-invariance
 and no-transition-difference claims are acceptances of the null; we read them as bounded (``no knob
-in this box''), and note that the same $n$ that detected the $+0.05$--$0.08$ few-shot route effects
-(Table~\ref{tab:fewshot}) are larger than the paired zero-shot route-difference confidence
-intervals; we therefore treat endpoint invariance as a bounded empirical observation, not a formal
+in this box''), and note that the paired zero-shot route-difference confidence intervals are smaller
+than the $+0.05$--$0.08$ few-shot effects in Table~\ref{tab:fewshot}; we therefore treat endpoint
+invariance as a bounded empirical observation, not a formal
 equivalence claim.
 \emph{The mechanism arms use $n{=}10$}; their effect sizes are large ($|\delta|\ge0.6$, $p<10^{-3}$)
 and the one place a small effect mattered---the k-shot ordering---is exactly where our $10\to20$-seed
@@ -398,8 +396,9 @@ $p_{\text{adj}} = 7.8\times10^{-4}$, $\delta = +0.71$; \texttt{state\_factored} 
 collapses less (Holm-corrected paired Wilcoxon, $n{=}20$). The grouping is by \emph{code format}---here, whether the queried attribute enters as a
 distributed continuous vector or token sequence (\texttt{text\_only}, weak and strong perceptual
 mixes) versus a discrete slot index (\texttt{state\_factored}, and \texttt{state\_onehot\_shared},
-whose one-hot is a single active index): the distributed codes transiently support composition
-while the index-like codes go directly to lookup. Notably this grouping is \emph{different}
+whose one-hot is a single active index): the token and weak-perceptual distributed codes transiently
+support composition, while the hard-perceptual route shows a comparable collapse but only a weaker
+peak whose CI overlaps chance; the index-like codes go directly to lookup. Notably this grouping is \emph{different}
 from the one that governs few-shot efficiency below---a double dissociation: trajectory shape
 tracks format, few-shot efficiency tracks pathway sharing. The transient is also capacity-fragile
 (the $n{=}8$ capacity-arm peak decays $0.385 \to 0.258$ from 6K to 153K parameters; cf.\ the
@@ -506,9 +505,10 @@ Route & vary right (correct) & vary left (wrong) & vary left (correct) & vary ri
 \end{tabular}
 \caption{Causal input-intervention on the held-out binding type ($n{=}10$; chance $0.25$). Each
 number is the fraction of (background, value) cases in which the output equals the shape set in the
-varied slot. On the held-out query the output causally tracks the \emph{wrong} slot and is
-insensitive to the correct one; on a trained query it correctly tracks the queried slot---a direct
-manipulation of the input, with no probe assumptions.}
+varied slot. On the held-out query the output is insensitive to the correct slot and, especially for
+the index routes, depends more on the wrong slot; on a trained query it depends much more on the
+queried slot than on the unqueried one---a direct manipulation of the input, with no probe
+assumptions.}
 \label{tab:causal}
 \end{table}
 
@@ -537,8 +537,8 @@ saturating near $0.48$ while every readable route keeps rising past $0.82$; pool
 vs.\ the oracle $-0.090$, $p = 3.8\times10^{-6}$ (exploratory) and $-0.112$, $p = 5.7\times10^{-6}$
 (confirmatory). Is the strong code's information merely linearly hidden? No: a nonlinear MLP
 decoder recovers its factors at only $0.56$ from the enumerated states (vs.\ $0.95$/$0.98$ linear/MLP
-for the weak code), so the $d{=}8$ saturating mix is \emph{practically} unreadable, not just
-linearly so, and the trained model's residual readability ($0.59$) sits near this decoder ceiling
+for the weak code), so the $d{=}8$ saturating mix is poorly readable in the tested probe classes, not
+just to a linear probe, and the trained model's residual readability ($0.59$) sits near this generic-decoder performance
 ($0.56$--$0.58$). We therefore state a narrower conclusion: a code decoded only weakly by our linear
 and MLP probes is the code the model binds through worst, and the model never reads a code better
 than a generic decoder does. We do \emph{not} claim ``linear readability gates binding even when
@@ -598,7 +598,7 @@ one-hot vs.\ weak-perceptual & $+0.004$ & $0.52$ & $-0.022$ & $0.083$\\
 \end{tabular}
 \caption{Few-shot binding, pooled advantage over the factored oracle (mean over doses per seed;
 Wilcoxon vs.\ 0; $n{=}20$). The two-factor account: shared readable pathways $>$ modular readable
-oracle $\gg$ shared unreadable code, replicated on a fresh held-out query type (the symbolic route
+oracle $\gg$ shared low-readability code, replicated on a fresh held-out query type (the symbolic route
 directionally, $p = 0.053$) and in a three-object world (\S\ref{sec:fewshot}, ``larger world'').}
 \label{tab:fewshot}
 \end{table}
@@ -631,8 +631,8 @@ sharing and readability. Zero-shot failure mode does not predict few-shot capabi
 \label{sec:discussion}
 \paragraph{What this says about grounding claims.} Delivering a provably sufficient world state
 through a non-symbolic channel bought, at this scale: no zero-shot composition, a few-shot
-advantage only when the code is nearly linearly readable, and a penalty when it is genuinely
-entangled. The operative variables were mundane---pathway sharing and readability of a fixed
+advantage only when the code is nearly linearly readable, and a penalty when entanglement makes the
+code poorly readable. The operative variables were mundane---pathway sharing and readability of a fixed
 \emph{synthetic} perceptual code (not a learned or naturalistic one)---not ``groundedness.'' We
 suggest route-based grounding claims in larger systems be held to the same
 control: match information exactly, then show the route effect survives.
@@ -644,7 +644,7 @@ single extra condition settle a two-way mechanism question. The cost is scale; n
 statements should be extrapolated beyond small transformers without new evidence.
 
 \paragraph{Limitations.} Worlds of $128$--$729$ states and $1$--$2$-layer models. Entanglement is
-operationalized at two strengths; the strong code is \emph{injective} (exact ceiling $1.0$, so no
+operationalized by two main routes plus a dimension-matched low-readability control; the strong code is \emph{injective} (exact ceiling $1.0$, so no
 information is destroyed) but hard for both linear and MLP decoders ($0.58$/$0.56$), so we cannot
 cleanly isolate ``linearly hard'' from ``hard for every decoder and model we tested''---the safe
 reading is that practical readability, not information content, gates binding here; whether a
@@ -789,6 +789,14 @@ $\{3\times10^{-4}, 3\times10^{-3}\}$ on the binding holdout (symbolic, oracle, w
 $n{=}10$): converged accuracy $0.18$--$0.24$, no significant route differences. Weight-decay grid on
 transitions: $\{0.01, 0.1, 0.3, 1.0\} \times 4{,}000$ epochs, $n{=}5$ each; held-out accuracy
 $0.000$ in all $20$ cells while train-side accuracy is flat at memorization from
-$\sim$epoch~40. Full per-seed values are in the released manifests.
+$\sim$epoch~40. \emph{Dimension-matched readability control} (\S\ref{sec:fewshot}): a $d{=}16$
+route from a fixed 3-layer tanh mix with higher gain through the same $16{\to}24$ shared pathway as
+the weak-perceptual route; exact Bayes ceiling $1.0$, raw linear decodability $0.57$ (matching the
+$d{=}8$ code's $0.58$), an injective code verified over all $256$ states. On the binding holdout
+($n{=}10$), its pooled few-shot deficit versus the $d{=}16$ readable weak-perceptual route is
+$-0.294$ ($p=0.002$), and it sits at or below the $d{=}8$ strong code ($-0.105$), so the deficit
+tracks readability rather than input dimension. A capacity sweep of the MLP decoder
+($(64,64)\to(256,256)\to(128,128,128)$) does not improve recovery of the strong code
+($0.56\to0.55\to0.54$). Full per-seed values are in the released manifests.
 
 \end{document}
