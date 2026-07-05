@@ -64,8 +64,11 @@ collapse is comparable but its peak CI overlaps chance); this trajectory effect 
 efficiency tracks pathway \emph{sharing}. (4)~\emph{Failure anatomy:} the symbolic route fails by
 \emph{losing} the answer at the readout position; index routes fail by \emph{systematically
 mis-binding}---the answer stays decodable in the residual, yet a direct input intervention shows
-the converged output causally tracks the \emph{wrong} object slot and ignores the correct one---and
+the converged output is more sensitive to the \emph{wrong} object slot than to the correct one---and
 the entangled route inherits, rather than improves on, the readability of its input.
+Of these, the central positive claim is the two-factor account of few-shot efficiency; endpoint
+invariance and failure anatomy are diagnostic constraints on it, and the transient a dynamical
+correlate.
 All code, manifests, and per-seed logs are available anonymously for exact reproduction.
 \end{abstract}
 
@@ -137,8 +140,8 @@ training tracks code format (distributed vs.\ index-like); few-shot efficiency t
 sharing. Exhaustive evaluation makes the transient a measured behavioral state, not noise.
 \item \textbf{Failure anatomy} (\S\ref{sec:anatomy}): control-task probes plus a causal
 input-intervention separate three failure modes---representation death at the readout position
-(symbolic), systematic mis-binding with the answer decodable but the output causally reading the
-wrong slot (index routes), and no readability gained over the input (entangled route).
+(symbolic), systematic mis-binding with the answer decodable but the output depending, under input
+intervention, on the wrong slot (index routes), and no readability gained over the input (entangled route).
 \end{itemize}
 
 \section{Related Work}
@@ -494,12 +497,12 @@ for a linear probe.)
 We therefore intervene directly on the world state and read the output (Table~\ref{tab:causal}). On
 the held-out ``shape of right'' query, varying the correct (right) slot leaves the output almost
 unchanged (all routes $0.15$--$0.24$, i.e.\ chance), while varying the wrong (left) slot moves it
-strongly (index routes $0.71$--$0.86$; symbolic $0.51$)---the converged output causally reads the
-wrong object. As a positive control, on a \emph{trained} query type the same intervention shows
+strongly (index routes $0.71$--$0.86$; symbolic $0.51$)---the converged output is more sensitive to
+the wrong object. As a positive control, on a \emph{trained} query type the same intervention shows
 every route showing substantially greater causal dependence on the queried slot ($0.67$--$1.00$)
 than on the unqueried one ($\approx 0.25$). What the intervention adds over the probe is real but bounded: it rules out
-``decodable-but-causally-inert'' and shows the readout is functionally wired to the wrong slot with
-the answer-representation intact. It identifies the functional readout the converged model uses: it
+``decodable-but-causally-inert'' and shows the output functionally depends on the wrong slot under
+input intervention, with the answer-representation intact. It identifies the functional readout the converged model uses: it
 reuses the readout for the trained shape slot rather than the held-out one (holding out ``shape of
 left'' instead flips which slot is read). The claim is the intact-representation-but-wrong-slot-dependence
 dissociation, not the direction of the error.
@@ -571,9 +574,28 @@ readable (raw linear $0.57$, matching the $d{=}8$ code's $0.58$) pools $-0.294$ 
 below the $d{=}16$ readable code and, if anything, sits slightly below the $d{=}8$ strong code
 ($-0.105$). Second, a graded readability sweep at fixed $d{=}16$: four shared-projection codes at raw
 linear decodability $\{0.95, 0.82, 0.76, 0.53\}$ produce \emph{monotonically} decreasing few-shot
-accuracy (at $f{=}0.2$: $\{0.93, 0.67, 0.57, 0.34\}$; Spearman $\rho{=}1.0$ at both $f{=}0.1$ and
-$0.2$, $n{=}10$). Few-shot binding is thus a graded function of readability at fixed dimension, not
-an artifact of one code---readability, not input dimension, drives the deficit.
+accuracy (Table~\ref{tab:readsweep}; Spearman $\rho{=}1.0$ at both $f{=}0.1$ and $0.2$, $n{=}10$).
+Few-shot binding is thus a graded function of readability at fixed dimension, not an artifact of one
+code---readability, not input dimension, drives the deficit.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Shared-projection code ($d{=}16$, injective) & \multicolumn{4}{c}{decreasing readability $\rightarrow$}\\
+Raw linear decodability & $0.95$ & $0.82$ & $0.76$ & $0.53$\\
+\midrule
+Few-shot binding accuracy, $f{=}0.1$ & $0.57$ & $0.48$ & $0.47$ & $0.32$\\
+Few-shot binding accuracy, $f{=}0.2$ & $0.93$ & $0.67$ & $0.57$ & $0.34$\\
+\bottomrule
+\end{tabular}
+\caption{Graded readability sweep at \emph{fixed} input dimension ($d{=}16$, shared projection, all
+four codes injective with exact ceiling $1.0$; $n{=}10$, chance $0.25$). Few-shot binding decreases
+monotonically with raw linear decodability (Spearman $\rho{=}1.0$ at both doses), so the
+strong-entangled deficit is a graded function of readability, not an artifact of a single
+adversarially-unreadable code or of input dimension.}
+\label{tab:readsweep}
+\end{table}
 
 \paragraph{Pathway sharing, dissociated.} Among readable routes, the surprise is that the cleanest
 code loses: the per-factor oracle is the \emph{least} sample-efficient. Two properties could
@@ -637,7 +659,7 @@ fresh held-out query type (symbolic directionally, $p=0.053$) and in a three-obj
 
 \paragraph{Larger world.} To check the account is not a two-object artifact we rerun the k-shot
 sweep in a three-object world ($729$ states, six query types, chance $0.333$; $n{=}10$). The two
-core effects replicate: the shared one-hot pathway again beats the oracle (pooled $+0.066$,
+core effects are consistent in this stress check: the shared one-hot pathway again beats the oracle (pooled $+0.066$,
 $p = 0.037$), and the strong-entangled route again collapses (pooled $-0.348$, $p = 0.002$;
 saturating near $0.51$ while readable routes exceed $0.94$). The one effect that does \emph{not}
 carry over is the weak-perceptual route's small edge over the oracle (pooled $-0.001$, $p = 0.77$),
@@ -770,17 +792,19 @@ carry over (it is testbed-specific).
 
 \begin{table}[h]
 \centering\small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
 Dose $f$ & \texttt{text\_only} & \texttt{state\_factored} & \texttt{onehot\_shared} & \texttt{perceptual} & \texttt{perceptual\_hard}\\
 \midrule
-$0.05$ & 0.68 & 0.72 & \textbf{0.81} & 0.71 & 0.45\\
-$0.10$ & 0.94 & 0.93 & \textbf{0.98} & 0.94 & 0.51\\
+$0.05$ & $0.68_{[.53,.83]}$ & $0.72_{[.66,.79]}$ & $\mathbf{0.81}_{[.74,.87]}$ & $0.71_{[.67,.76]}$ & $0.45_{[.42,.48]}$\\
+$0.10$ & $0.94_{[.87,.98]}$ & $0.93_{[.90,.96]}$ & $\mathbf{0.98}_{[.97,.99]}$ & $0.94_{[.93,.96]}$ & $0.51_{[.49,.54]}$\\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Three-object world, converged held-out balanced accuracy by route and dose ($n{=}10$,
-chance $0.333$). Pooled vs.\ oracle: one-hot $+0.066$ ($p{=}0.037$); strong-entangled $-0.348$
-($p{=}0.002$); weak-perceptual $-0.001$ ($p{=}0.77$, non-replicating).}
+chance $0.333$; subscripts are $95\%$ bootstrap CIs). Pooled vs.\ oracle: one-hot $+0.066$
+($p{=}0.037$); strong-entangled $-0.348$ ($p{=}0.002$); weak-perceptual $-0.001$ ($p{=}0.77$,
+non-replicating).}
 \label{tab:bind3}
 \end{table}
 
