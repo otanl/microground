@@ -32,6 +32,8 @@ trajectories per run).
 | E13b | nonlinear-decoder control | `$P scripts/mg_nonlinear.py` |
 | E13c | larger world (3 objects) | `... --name bind3_kshot_f{F} --task bind3 --split bind_kshot:5:{F} --conditions text_only state_factored state_perceptual state_perceptual_hard state_onehot_shared --seeds 10 --epochs 500` for F in 0.05,0.1 |
 | E13d | lr sensitivity | `... --name bind_lr{LR} --task bind --split bind:3 --conditions text_only state_factored state_perceptual --lr {LR} --seeds 10 --epochs 500` for LR in 3e-4,3e-3 |
+| E15 | dimension-matched readability control | `... --name bind_dimctrl_f{F} --task bind --split bind_kshot:3:{F} --conditions state_factored state_perceptual state_perceptual_hard state_perceptual_hard16 --seeds 10 --epochs 500` for F in 0.05,0.1,0.2 |
+| E16 | graded readability sweep (fixed dim16) | `... --name bind_readsweep_f{F} --task bind --split bind_kshot:3:{F} --conditions state_factored state_perceptual state_perceptual_r085 state_perceptual_r073 state_perceptual_hard16 --seeds 10 --epochs 500` for F in 0.1,0.2 |
 
 ## Analysis / figures (re-aggregate, no retraining)
 - `scripts/mg_analyze.py --name <run> --reference <cond>` — converged metric, CI, Wilcoxon+Holm, peak.

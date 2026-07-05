@@ -140,6 +140,8 @@ STATE_MODE = {
     "perceptual": "perceptual",
     "perceptual_hard": "perceptual",
     "perceptual_hard16": "perceptual",
+    "perceptual_r085": "perceptual",
+    "perceptual_r073": "perceptual",
     "perceptual_b": "perceptual",
     "perceptual_c": "perceptual",
     "perceptual_hard_b": "perceptual",
@@ -166,6 +168,8 @@ CONDITIONS: Dict[str, Condition] = {
     "state_perceptual":  Condition("state_perceptual",  show_description=False, encoder_name="perceptual"),
     "state_perceptual_hard": Condition("state_perceptual_hard", show_description=False, encoder_name="perceptual_hard"),
     "state_perceptual_hard16": Condition("state_perceptual_hard16", show_description=False, encoder_name="perceptual_hard16"),
+    "state_perceptual_r085": Condition("state_perceptual_r085", show_description=False, encoder_name="perceptual_r085"),
+    "state_perceptual_r073": Condition("state_perceptual_r073", show_description=False, encoder_name="perceptual_r073"),
     "state_onehot_shared": Condition("state_onehot_shared", show_description=False, encoder_name="onehot"),
     # alternative mix instantiations (robustness to the fixed synthetic map, not a single draw)
     "state_perceptual_b": Condition("state_perceptual_b", show_description=False, encoder_name="perceptual_b"),
@@ -194,6 +198,10 @@ def make_encoder(name: str, world: FactoredWorld) -> StateEncoder:
     if name == "perceptual_hard16":
         # dimension-matched to weak (d=16) but poorly readable -> isolates readability from dim
         return PerceptualState(world, dim=16, gain=4.0, depth=4, seed=PERCEPT_SEED + 2)
+    if name == "perceptual_r085":   # d=16 readability sweep: intermediate (~0.85)
+        return PerceptualState(world, dim=16, gain=1.8, depth=3, seed=PERCEPT_SEED + 3)
+    if name == "perceptual_r073":   # d=16 readability sweep: intermediate (~0.73)
+        return PerceptualState(world, dim=16, gain=2.5, depth=3, seed=PERCEPT_SEED + 4)
     if name == "perceptual_b":
         return PerceptualState(world, seed=PERCEPT_SEED + 10)
     if name == "perceptual_c":

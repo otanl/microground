@@ -50,11 +50,12 @@ type is leaked into training, within the tested cells sample efficiency is best 
 (i)~\emph{input-pathway parameter sharing} (a shared projection transfers to unseen query types;
 per-factor embedding tables do not) and (ii)~\emph{readability} of the code (a poorly readable
 entangled code, whose raw linear decodability drops $0.95 \to 0.58$, has the worst pooled few-shot
-performance and saturates far below the readable alternatives; a dimension-matched control isolates
-readability from input dimension). Two parameter-controlled pairwise dissociations (a three-cell
+performance and saturates far below the readable alternatives; a dimension-matched control and a
+graded readability sweep---few-shot accuracy is monotone in decodability at fixed input
+dimension---isolate readability from dimension). Two parameter-controlled pairwise dissociations (a three-cell
 partial factorial) separate the factors; the two core effects (sharing helps, low readability hurts)
-replicate across two held-out shape query types at 20 seeds and in a larger three-object world,
-while the weak-perceptual edge over the oracle is testbed-specific. Notably, the clean per-factor oracle is not the most sample-efficient
+replicate across two held-out shape query types at 20 seeds, and are corroborated as a stress check
+in a modestly larger three-object world, while the weak-perceptual edge over the oracle is testbed-specific. Notably, the clean per-factor oracle is not the most sample-efficient
 readable route; shared readable pathways transfer better.
 (3)~\emph{A double dissociation:} early in training, distributed codes---but not index-like
 codes---pass through a transient phase of above-chance zero-shot transfer before collapsing into
@@ -128,9 +129,9 @@ tiny world may not reward the rule.)
 cells, two pairwise dissociations point to input-pathway parameter sharing and practical readability
 as the dominant predictors of sample efficiency (a three-cell partial factorial, not a full
 interaction estimate); the clean per-factor oracle is not the most sample-efficient readable route;
-the effects replicate across two held-out shape query types at 20 seeds and in a larger three-object
-world, and are robust to description order, synthetic mix, and---for readability---a dimension-matched
-control.
+the effects replicate across two held-out shape query types at 20 seeds and are corroborated as a
+stress check in a modestly larger three-object world, and are robust to description order, synthetic
+mix, and---for readability---a dimension-matched control.
 \item \textbf{A double dissociation} (\S\ref{sec:dynamics}): transient zero-shot transfer early in
 training tracks code format (distributed vs.\ index-like); few-shot efficiency tracks pathway
 sharing. Exhaustive evaluation makes the transient a measured behavioral state, not noise.
@@ -200,6 +201,15 @@ of unsupervised disentanglement \citep{locatello2019challenging}; our probes fol
 \citet{hewitt2019designing}, with representation geometry in mind \citep{elhage2022toy}. Grounding
 debate anchors \citep{bender2020climbing,bisk2020experience,merrill2021provable,patel2022mapping}
 motivate the operational question without settling it.
+
+\paragraph{What is isolated here, versus already known.} Individually, several ingredients are not
+new: parameter sharing aids systematic generalization \citep{csordas2021devil}, disentangled codes
+are not sufficient for it \citep{montero2021role}, and small transformers memorize under weak
+compositional pressure. Our contribution is not any single effect but the \emph{confound removal}
+that lets these be separated: by matching information exactly (verified by per-route Bayes
+ceilings), enumerating the entire input space, and factoring the input pathway into sharing, code
+format, and readability, we isolate variables that modality comparisons ordinarily leave entangled
+with dataset, capacity, difficulty, and information content.
 
 \section{The \microground{} Testbed}
 \label{sec:testbed}
@@ -471,7 +481,7 @@ Three distinct failure modes emerge (Figure~\ref{fig:anatomy}). \emph{Representa
 present at the readout position exactly while the behavioral transient lasts, then fades;
 converged behavior is near-unbiased guessing among shapes. \emph{Systematic mis-binding} (index
 routes): the answer remains near-perfectly linearly decodable in the residual stream at every
-checkpoint, yet the converged model reads the wrong slot on up to $87\%$ of discriminating states---an intact representation with a mis-wired readout, and the mechanistic ground of the
+checkpoint, yet the converged model reads the wrong slot on up to $87\%$ of discriminating states---an intact representation but a behavioral output that depends on the wrong slot, the mechanistic ground of the
 below-chance entries in Table~\ref{tab:zeroshot}. \emph{No readability gained} (strong-entangled):
 residual decodability ($0.589$) equals the input's raw decodability at every checkpoint; the model
 inherits its input's readability rather than improving on it. (We stop short of ``the information
@@ -491,7 +501,7 @@ than on the unqueried one ($\approx 0.25$). What the intervention adds over the 
 ``decodable-but-causally-inert'' and shows the readout is functionally wired to the wrong slot with
 the answer-representation intact. It identifies the functional readout the converged model uses: it
 reuses the readout for the trained shape slot rather than the held-out one (holding out ``shape of
-left'' instead flips which slot is read). The claim is the intact-representation-plus-mis-wired-readout
+left'' instead flips which slot is read). The claim is the intact-representation-but-wrong-slot-dependence
 dissociation, not the direction of the error.
 
 \begin{table}[h]
@@ -552,14 +562,18 @@ MLP-recoverable cell is not one we could construct with a fixed tanh mix (the co
 reduced linear readability also reduced recoverability by our MLP decoder), and building it is open
 work.
 
-\paragraph{Readability, not input dimension.} The strong route is lower-dimensional ($d{=}8$) than
-the readable routes ($d{=}16$), raising the confound that its few-shot deficit reflects input
-dimension rather than readability. A dimension-matched control rules this out: a $d{=}16$ entangled
-code (higher gain and depth) that is injective (exact ceiling $1.0$) yet poorly readable (raw linear
-$0.57$, matching the $d{=}8$ code's $0.58$). At matched dimension, removing readability collapses
-few-shot binding---this $d{=}16$ poorly-readable code pools $-0.294$ ($p=0.002$, $n{=}10$) below the
-$d{=}16$ readable code and, if anything, sits slightly below the $d{=}8$ strong code
-($-0.105$)---so readability, not input dimension, drives the deficit.
+\paragraph{Readability, not input dimension, and graded.} The strong route is lower-dimensional
+($d{=}8$) than the readable routes ($d{=}16$), raising the confound that its few-shot deficit
+reflects input dimension rather than readability, and the worry that we simply built one
+adversarially unreadable code. Two controls answer both. First, a dimension-matched control: a
+$d{=}16$ entangled code (higher gain and depth) that is injective (exact ceiling $1.0$) yet poorly
+readable (raw linear $0.57$, matching the $d{=}8$ code's $0.58$) pools $-0.294$ ($p=0.002$, $n{=}10$)
+below the $d{=}16$ readable code and, if anything, sits slightly below the $d{=}8$ strong code
+($-0.105$). Second, a graded readability sweep at fixed $d{=}16$: four shared-projection codes at raw
+linear decodability $\{0.95, 0.82, 0.76, 0.53\}$ produce \emph{monotonically} decreasing few-shot
+accuracy (at $f{=}0.2$: $\{0.93, 0.67, 0.57, 0.34\}$; Spearman $\rho{=}1.0$ at both $f{=}0.1$ and
+$0.2$, $n{=}10$). Few-shot binding is thus a graded function of readability at fixed dimension, not
+an artifact of one code---readability, not input dimension, drives the deficit.
 
 \paragraph{Pathway sharing, dissociated.} Among readable routes, the surprise is that the cleanest
 code loses: the per-factor oracle is the \emph{least} sample-efficient. Two properties could
@@ -668,7 +682,7 @@ cleanly isolate ``linearly hard'' from ``hard for every decoder and model we tes
 reading is that practical readability, not information content, gates binding here; whether a
 high-information code that is linearly unreadable but nonlinearly recoverable would bind well is an
 untested cell. Our causal test intervenes on the input (a clean but coarse handle); internal
-readout-swap or activation-patching evidence would further localize the mis-wiring. The symbolic
+readout-swap or activation-patching evidence would localize this dependence to an internal readout. The symbolic
 route's fixed description order permits absolute-position shortcuts (its binding may be easier than
 free-order text). Few-shot leakage varies which examples leak by seed but not the schedule. The
 two-factor account's core (sharing, readability) replicated on a second held-out type and a
@@ -747,7 +761,7 @@ and code.}
 \label{tab:spec}
 \end{table}
 
-\section{Larger-World Replication (Three Objects)}
+\section{Larger-World Stress Check (Three Objects)}
 \label{app:bind3}
 Table~\ref{tab:bind3} gives the three-object k-shot sweep ($729$ states, six query types, chance
 $0.333$; $n{=}10$) referenced in \S\ref{sec:fewshot}. The shared one-hot pathway leads and the
@@ -813,7 +827,11 @@ the weak-perceptual route; exact Bayes ceiling $1.0$, raw linear decodability $0
 $d{=}8$ code's $0.58$), an injective code verified over all $256$ states. On the binding holdout
 ($n{=}10$), its pooled few-shot deficit versus the $d{=}16$ readable weak-perceptual route is
 $-0.294$ ($p=0.002$), and it sits at or below the $d{=}8$ strong code ($-0.105$), so the deficit
-tracks readability rather than input dimension. A capacity sweep of the MLP decoder
+tracks readability rather than input dimension. \emph{Graded readability sweep} (\S\ref{sec:fewshot}):
+four shared-projection $d{=}16$ codes at raw linear decodability $\{0.95, 0.82, 0.76, 0.53\}$ give
+few-shot accuracy $\{0.57, 0.48, 0.47, 0.32\}$ at $f{=}0.1$ and $\{0.93, 0.67, 0.57, 0.34\}$ at
+$f{=}0.2$ ($n{=}10$; Spearman $\rho{=}1.0$ at both doses), so few-shot binding is monotone in
+readability at fixed dimension. A capacity sweep of the MLP decoder
 ($(64,64)\to(256,256)\to(128,128,128)$) does not improve recovery of the strong code
 ($0.56\to0.55\to0.54$). Full per-seed values are in the released manifests.
 
