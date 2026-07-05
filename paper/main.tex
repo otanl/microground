@@ -15,7 +15,7 @@
 \usepackage{amssymb}
 \usepackage{multirow}
 
-\title{Input Pathways Shape How, Not Whether, Tiny Transformers Learn to Bind:\\
+\title{Input Pathways Shape Few-Shot, Not Zero-Shot, Binding in Tiny Transformers:\\
 A Fully-Enumerable Study}
 
 \author{\name Anonymous Author(s) \email anon@example.com \\
@@ -35,13 +35,13 @@ How does the \emph{way} information reaches a transformer---as symbolic in-conte
 clean per-factor ``oracle'' code, or as an entangled perceptual vector---affect whether the model
 can \emph{bind} that information compositionally? We study this in a deliberately extreme regime:
 transformers of $\sim$6--10K parameters on finite factored worlds that we enumerate exhaustively,
-so every claim is evaluated on the entire input space (zero sampling variance), every informative
-condition is information-theoretically matched (each such route uniquely determines the answer, a
-fact we verify with exact Bayes ceilings), and every headline comparison is run at 10--20 seeds
-with paired nonparametric tests (robustness arms use 5--20).
-We report four findings. (1)~\emph{Endpoint invariance:} on held-out binding queries no route
-yields converged zero-shot composition---every route ends at or below chance despite each route's
-exact Bayes ceiling being $1.0$, so within our bounded sweep (a ${\sim}25\times$ parameter increase,
+so every behavioral measurement is evaluated on the entire input space (zero sampling variance),
+the informative input channels are matched in the sense that each uniquely determines the answer
+(verified by exact Bayes ceilings), and every headline comparison is run at 10--20 seeds with
+paired nonparametric tests (robustness arms use 5--20).
+We report four findings. (1)~\emph{Endpoint invariance:} on held-out binding queries no informative
+route yields converged zero-shot composition---each ends at or below chance despite an exact Bayes
+ceiling of $1.0$, so within our bounded sweep (a ${\sim}25\times$ parameter increase,
 a $10\times$ learning-rate range, weight decay, and longer training) the failure is one of
 inductive bias, not information. (A parallel transition-holdout diagnostic shows the same
 memorization pattern; we treat it as weaker evidence, as the tiny world may not reward the rule.)
@@ -50,12 +50,11 @@ type is leaked into training, sample efficiency (in this testbed) is governed by
 (i)~\emph{input-pathway parameter sharing} (a shared projection transfers to unseen query types;
 per-factor embedding tables do not) and (ii)~\emph{readability} of the code (an entangled code that
 probes cannot decode, raw linear decodability $0.95 \to 0.58$, is worse than every readable
-alternative). A
-two parameter-matched pairwise dissociations (a three-cell partial factorial) separate the factors;
-the two core effects (sharing helps,
-unreadability hurts) replicate across two held-out query types at 20 seeds and in a larger
-three-object world, while the weak-perceptual edge over the oracle is testbed-specific. Strikingly,
-the cleanest ``oracle'' code is the \emph{least} efficient readable route.
+alternative). Two parameter-matched pairwise dissociations (a three-cell partial factorial) separate
+the factors; the two core effects (sharing helps, unreadability hurts) replicate across two held-out
+query types at 20 seeds and in a larger three-object world, while the weak-perceptual edge over the
+oracle is testbed-specific. Notably, the clean per-factor oracle is not the most sample-efficient
+readable route; shared readable pathways transfer better.
 (3)~\emph{A double dissociation:} early in training, distributed codes---but not index-like
 codes---pass through a transient phase of above-chance zero-shot transfer before collapsing into
 memorization (clearly for the symbolic and weak-perceptual routes; the strong-entangled route's
@@ -101,12 +100,11 @@ object slot, which it has also seen. We complement binding with a systematic tra
 (counterfactual successor, $v \mapsto (v{+}1) \bmod k$) under a transition holdout, an instance of
 the leave-region-out diagnostic of \citet{hu2024case}.
 
-We began this project expecting---and initially believing we had found---evidence that grounded
-routes induce compositional structure. Our own adversarial control (an entangled perceptual code
-that defeats linear decoding) falsified that hypothesis, and the falsification replicated. What
-survived 20-seed replication across two held-out query types is, we believe, more useful than the
-hypothesis it replaced: a mechanistic account of \emph{which properties of an input pathway matter,
-for what, and why}, together with an unusually well-controlled negative result about zero-shot
+An initially plausible hypothesis---that entangled, grounded-like routes encourage compositional
+structure---is falsified here by a strong-entangled control (an entangled perceptual code that
+defeats linear decoding), replicated across two held-out query types. What the controls isolate
+instead is a mechanistic account of \emph{which properties of an input pathway matter, for what, and
+why}, together with an unusually well-controlled negative result about zero-shot
 compositionality at this scale.
 
 \paragraph{Contributions.}
@@ -118,16 +116,16 @@ per-route solvability ceilings, exhaustive evaluation with zero sampling varianc
 statistical protocol (converged-accuracy metric, 5--20 seeds with 10--20 for all headline
 comparisons, paired Wilcoxon with Holm--Bonferroni, bootstrap CIs, effect sizes) under an explicit
 exploratory/confirmatory split.
-\item \textbf{Endpoint invariance} (\S\ref{sec:endpoint}): no route achieves converged zero-shot
-compositional binding or transition generalization; robust to capacity, weight decay, and training
-length; all failures occur strictly below a ceiling of $1.0$, and on transitions all routes fall
-below even the \emph{blind} majority ceiling. (We read this as an inductive-bias limit for
+\item \textbf{Endpoint invariance} (\S\ref{sec:endpoint}): no informative route achieves converged
+zero-shot compositional binding or transition generalization; robust to capacity, weight decay, and
+training length; all failures occur strictly below a ceiling of $1.0$, and on transitions all
+informative routes fall below even the \emph{blind} majority ceiling. (We read this as an inductive-bias limit for
 \emph{binding}, where the held-out parts are all present; for the transition task the same wording
 is weaker---the world may be too small to reward the rule---so we scope that claim in \S\ref{sec:endpoint}.)
 \item \textbf{A two-factor account of few-shot binding} (\S\ref{sec:fewshot}): sample efficiency is
 governed by input-pathway parameter sharing and readability; two parameter-matched pairwise
-dissociations (a three-cell partial factorial) separate them; the clean per-factor oracle is the
-worst readable route; replicated across two held-out query types at 20 seeds and a three-object
+dissociations (a three-cell partial factorial) separate them; the clean per-factor oracle is not
+the most sample-efficient readable route; replicated across two held-out query types at 20 seeds and a three-object
 world, and robust to the description order and to the specific synthetic mix.
 \item \textbf{A double dissociation} (\S\ref{sec:dynamics}): transient zero-shot transfer early in
 training tracks code format (distributed vs.\ index-like); few-shot efficiency tracks pathway
@@ -276,7 +274,7 @@ confirmatory-style; we mark exploratory versus confirmatory results throughout. 
 a self-describing record (config, seeds, trajectories) to a JSONL manifest from which all tables
 and figures re-aggregate without retraining.
 
-Two scope notes on the statistics. \emph{Invariance is failure-to-reject.} The endpoint-invariance
+Two scope notes on the statistics. \emph{Interpreting null endpoint differences.} The endpoint-invariance
 and no-transition-difference claims are acceptances of the null; we read them as bounded (``no knob
 in this box''), and note that the same $n$ that detected the $+0.05$--$0.08$ few-shot route effects
 (Table~\ref{tab:fewshot}) would have detected zero-shot route differences of that size, so any
@@ -286,7 +284,7 @@ and the one place a small effect mattered---the k-shot ordering---is exactly whe
 firm-up caught and shrank it, so we trust the large mechanism effects at $n{=}10$ while reporting the
 smaller ones (symbolic route) as non-significant.
 
-Honest accounting: two effects we initially believed in did not survive this protocol. A three-way
+Two exploratory refinements did not survive this protocol. A three-way
 route ordering visible at 10 seeds shrank to a two-group structure at 20 seeds; and our headline
 hypothesis---that a grounded side-channel induces compositional structure---was falsified by the
 strong-entangled control we designed to test it (\S\ref{sec:fewshot}).
@@ -304,7 +302,7 @@ from \emph{training} (for a held-out query type it is not), and that the input i
 particular decoder or model class to read.
 
 The audit yields three facts used throughout. (1)~Every informative route is \emph{injective}
-(ceiling $1.0$) on every split: distinct states yield distinct inputs, so no route below fails for
+(ceiling $1.0$) on every split: distinct states yield distinct inputs, so no informative route below fails for
 lack of information in the input---failures are of inductive bias or (for held-out query types)
 train-time identifiability, not of channel capacity. (2)~The floors are exactly chance on binding
 holdouts (ceiling $0.250$: the question alone carries nothing) and $0.833$ on transition holdouts
@@ -315,17 +313,17 @@ $\delta = +0.02$), and \texttt{scrambled\_state} reaches $1.000$ in distribution
 bijective code is learned perfectly when information content is matched. Full ceiling values are
 in Appendix~\ref{app:ceilings}.
 
-\section{Results I: Endpoint Invariance---No Route Buys Zero-Shot Compositionality}
+\section{Results I: Endpoint Invariance---No Route Yields Zero-Shot Compositionality}
 \label{sec:endpoint}
 \paragraph{Binding.} Table~\ref{tab:zeroshot} gives converged accuracy on the held-out query type
 (exploratory holdout, $n{=}20$). Every route ends at or below chance ($0.25$); the strong-entangled
 route ends far below ($0.146$), and the oracle ends below ($0.198$)---systematic error, not
 agnosticism (\S\ref{sec:anatomy}). In-distribution learning is intact (all informative routes fit
-the three trained query types; 2-seed unconverged random-split sanity runs reach
-$0.73$--$1.00$), so the failure is specific to composition. \textbf{Scope.} Because training
+the three trained query types; random-split sanity checks confirm the models learn the task in
+distribution), so the failure is specific to composition. \textbf{Scope.} Because training
 covers three of the four query types, pure lookup is a low-loss training solution, so the world
 does not strongly \emph{reward} composition; ``endpoint invariance'' should be read as ``in
-training regimes where memorization suffices, no route within our bounded sweep (${\le}2$ layers,
+training regimes where memorization suffices, no informative route within our bounded sweep (${\le}2$ layers,
 ${\le}96$ hidden, AdamW, LR/wd ranges below, ${\le}4000$ epochs) escapes it,'' not as a universal
 limit. The exact ceiling of $1.0$ rules out an \emph{information} explanation, not a
 training-objective one; a design that makes lookup costly (more held-out types) is the right next
@@ -394,9 +392,11 @@ exclude max-of-noise explanations.
 Collapse magnitude separates routes sharply: \texttt{text\_only} vs.\ \texttt{state\_factored}
 $p_{\text{adj}} = 7.8\times10^{-4}$, $\delta = +0.71$; \texttt{state\_factored} vs.\
 \texttt{state\_perceptual} $p_{\text{adj}} = 9.0\times10^{-4}$, $\delta = -0.64$, i.e.\ the oracle
-collapses less (Holm-corrected paired Wilcoxon, $n{=}20$). The grouping is by \emph{code format}: distributed codes (tokens, weak
-and strong perceptual mixes) transiently support composition; index-like codes (per-factor tables,
-one-hot through a shared linear) go directly to lookup. Notably this grouping is \emph{different}
+collapses less (Holm-corrected paired Wilcoxon, $n{=}20$). The grouping is by \emph{code format}---here, whether the queried attribute enters as a
+distributed continuous vector or token sequence (\texttt{text\_only}, weak and strong perceptual
+mixes) versus a discrete slot index (\texttt{state\_factored}, and \texttt{state\_onehot\_shared},
+whose one-hot is a single active index): the distributed codes transiently support composition
+while the index-like codes go directly to lookup. Notably this grouping is \emph{different}
 from the one that governs few-shot efficiency below---a double dissociation: trajectory shape
 tracks format, few-shot efficiency tracks pathway sharing. The transient is also capacity-fragile
 (the $n{=}8$ capacity-arm peak decays $0.385 \to 0.258$ from 6K to 153K parameters; cf.\ the
@@ -480,11 +480,10 @@ wrong object. As a positive control, on a \emph{trained} query type the same int
 every route causally tracking the \emph{correct} slot ($0.67$--$1.00$) and ignoring the other
 ($\approx 0.25$). What the intervention adds over the probe is real but bounded: it rules out
 ``decodable-but-causally-inert'' and shows the readout is functionally wired to the wrong slot with
-the answer-representation intact. It does \emph{not} discover a surprising pathology---reading the
-trained (left) position for a shape query is the expected reuse of the single shape-readout the
-model ever built, and holding out ``shape of left'' instead (the \texttt{bind:1} arm) would flip
-which slot is read. The value is the intact-representation-plus-mis-wired-readout dissociation, not
-the direction of the error.
+the answer-representation intact. It identifies the functional readout the converged model uses: it
+reuses the readout for the trained shape slot rather than the held-out one (holding out ``shape of
+left'' instead flips which slot is read). The claim is the intact-representation-plus-mis-wired-readout
+dissociation, not the direction of the error.
 
 \begin{table}[h]
 \centering\small
@@ -525,7 +524,7 @@ outperform the modular oracle (orange); the entangled route (red) saturates far 
 \label{fig:dose}
 \end{figure}
 
-\paragraph{The hypothesis we falsified.} We initially hypothesized that \emph{entangled} routes
+\paragraph{Entanglement does not explain few-shot transfer.} We initially hypothesized that \emph{entangled} routes
 induce compositional structure (the model must compute factors, so it builds factorized machinery
 that transfers). The strong-entangled route is this hypothesis's adversarial test: if entanglement
 drives composition, harder entanglement should help. It does the opposite---worst pooled over doses,
@@ -535,7 +534,7 @@ vs.\ the oracle $-0.090$, $p = 3.8\times10^{-6}$ (exploratory) and $-0.112$, $p 
 decoder recovers its factors at only $0.56$ from the enumerated states (vs.\ $0.95$/$0.98$ linear/MLP
 for the weak code), so the $d{=}8$ saturating mix is \emph{practically} unreadable, not just
 linearly so, and the trained model's residual readability ($0.59$) sits near this decoder ceiling
-($0.56$--$0.58$). We therefore state only the weaker, safer form: a code that no probe (linear or
+($0.56$--$0.58$). We therefore state a narrower conclusion: a code that no probe (linear or
 MLP) can decode is the code the model binds through worst, and the model never reads a code better
 than a generic decoder does. We do \emph{not} claim ``linear readability gates binding even when
 information is nonlinearly recoverable''---the decisive high-information, linearly-unreadable,
@@ -557,13 +556,12 @@ oracle by $+0.057$ ($p = 0.0020$) exploratory and $+0.062$ ($p = 1.1\times10^{-4
 and is statistically indistinguishable from weak-perceptual ($p = 0.52$ / $p = 0.083$). Code format
 did not explain the few-shot differences among the readable codes we tested;
 \emph{input-pathway parameter sharing} did. The
-mechanism is, in hindsight, simple: a shared projection is trained by every query type and
-therefore already implements the held-out one, while the held-out factor's private table receives
-no readout-relevant gradient---weight-tying transfers, untied parameters do not
-\citep{csordas2021devil}. We do not claim this is deep; the contribution is that sharing and code
-\emph{format} were a priori confounded (the oracle is both index-like and modular) and the
-parameter-matched onehot cell shows \emph{sharing}, not format, carries the effect---and that the
-maximally clean per-factor code is thereby the \emph{worst} readable route, an instance of
+mechanism is simple: a shared projection receives gradients from every query type and therefore
+already implements the held-out one, while private per-factor tables do not---weight-tying
+transfers, untied parameters do not \citep{csordas2021devil}. The controlled comparison is what
+isolates it: sharing and code \emph{format} are otherwise confounded (the oracle is both index-like
+and modular), and the parameter-matched onehot cell shows \emph{sharing}, not format, carries the
+effect---so the maximally clean per-factor code is the \emph{worst} readable route, an instance of
 disentanglement-is-not-sufficient \citep{montero2021role} with an identified cause. The symbolic
 route is direction-consistent with the shared group but not individually significant in confirmation
 ($+0.073$, $p = 0.027$ exploratory; $+0.061$, $p = 0.053$).
