@@ -1,0 +1,42 @@
+{
+  "counterfactual/transition_frac:0.3": {
+    "text_minimal": 0.8333333333333334,
+    "uninformative_state": 0.8333333333333334,
+    "scrambled_state": 1.0,
+    "text_only": 1.0,
+    "state_factored": 1.0,
+    "state_perceptual": 1.0,
+    "state_perceptual_hard": 1.0,
+    "state_onehot_shared": 1.0
+  },
+  "counterfactual/random": {
+    "text_minimal": 0.4230769230769231,
+    "uninformative_state": 0.4230769230769231,
+    "scrambled_state": 1.0,
+    "text_only": 1.0,
+    "state_factored": 1.0,
+    "state_perceptual": 1.0,
+    "state_perceptual_hard": 1.0,
+    "state_onehot_shared": 1.0
+  },
+  "bind/bind:3": {
+    "text_minimal": 0.25,
+    "uninformative_state": 0.25,
+    "scrambled_state": 1.0,
+    "text_only": 1.0,
+    "state_factored": 1.0,
+    "state_perceptual": 1.0,
+    "state_perceptual_hard": 1.0,
+    "state_onehot_shared": 1.0
+  },
+  "bind/random": {
+    "text_minimal": 0.32211538461538464,
+    "uninformative_state": 0.32211538461538464,
+    "scrambled_state": 1.0,
+    "text_only": 1.0,
+    "state_factored": 1.0,
+    "state_perceptual": 1.0,
+    "state_perceptual_hard": 1.0,
+    "state_onehot_shared": 1.0
+  }
+}

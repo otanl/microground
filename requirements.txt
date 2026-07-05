@@ -1,0 +1,17 @@
+# ---------------------------------------------------------------------------
+# Environment for the SLM project (self-built tiny LLM replicas)
+# Python 3.12.x recommended
+# ---------------------------------------------------------------------------
+# For GPU training, install torch with CUDA wheel manually:
+#     pip install torch==2.12.1 --index-url https://download.pytorch.org/whl/cu126
+# For CPU-only experiments (sufficient for ~10K models), the CPU wheel is fine.
+# ---------------------------------------------------------------------------
+torch>=2.1.0
+transformers>=4.40.0
+huggingface_hub>=0.24.0
+datasets>=2.20.0
+tokenizers>=0.19.0
+numpy>=1.26.0
+matplotlib>=3.8.0
+tqdm>=4.66.0
+scikit-learn>=1.5.0

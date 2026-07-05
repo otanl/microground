@@ -1,0 +1,41 @@
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Regenerable artifacts (see REPRODUCE.md) -- manifests in results/mg/ are kept
+models/
+data/
+
+# LaTeX build intermediates (main.tex/.bib and main.pdf are kept)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/*.toc
+
+# Internal tooling / scratch (not research artifacts)
+CLAUDE.md
+scratch_paper.txt
+scratch*.txt
+*.tmp
+
+
+# Companion / pre-redesign work -- excluded from this paper's repo (kept locally)
+docs/
+src/slm/
+scripts/01_inspect_and_generate.py
+scripts/finetune_slm_microground.py
+scripts/plot_slm_comparison.py
+scripts/run_grok_sweep.py
+scripts/train_pretrain.py
+scripts/train_task.py
+scripts/train_tokenizer.py
+
+# Legacy result summaries (companion/pre-redesign); paper uses results/mg/
+results/*.json

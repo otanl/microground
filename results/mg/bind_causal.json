@@ -1,0 +1,32 @@
+{
+  "text_only": {
+    "held_track_right": 0.24104166666666668,
+    "held_track_left": 0.5135416666666667,
+    "train_track_left": 1.0,
+    "train_track_right": 0.25
+  },
+  "state_factored": {
+    "held_track_right": 0.18083333333333335,
+    "held_track_left": 0.7079166666666666,
+    "train_track_left": 1.0,
+    "train_track_right": 0.25
+  },
+  "state_onehot_shared": {
+    "held_track_right": 0.2177083333333333,
+    "held_track_left": 0.8612500000000001,
+    "train_track_left": 1.0,
+    "train_track_right": 0.25
+  },
+  "state_perceptual": {
+    "held_track_right": 0.170625,
+    "held_track_left": 0.4252083333333333,
+    "train_track_left": 0.6729166666666667,
+    "train_track_right": 0.26083333333333336
+  },
+  "state_perceptual_hard": {
+    "held_track_right": 0.145625,
+    "held_track_left": 0.29854166666666665,
+    "train_track_left": 0.8908333333333334,
+    "train_track_right": 0.25249999999999995
+  }
+}
