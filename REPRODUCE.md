@@ -1,6 +1,6 @@
 # Reproduction guide (anonymous supplement)
 
-TMLR submission *"Input Pathways Shape How, Not Whether, Tiny Transformers Learn to Bind."*
+Companion to the paper *"Input Pathways Shape Few-Shot, Not Zero-Shot, Binding in Tiny Transformers: A Fully-Enumerable Study"* (arXiv:2607.04926).
 Everything re-aggregates from committed JSONL manifests in `results/mg/` **without retraining**;
 the training commands below regenerate those manifests from scratch.
 
