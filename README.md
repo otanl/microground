@@ -1,7 +1,7 @@
 # MicroGround
 
-Code and data for the paper **"Input Pathways Shape How, Not Whether, Tiny Transformers Learn to
-Bind: A Fully-Enumerable Study."**
+Code and data for the paper **"Input Pathways Shape Few-Shot, Not Zero-Shot, Binding in Tiny
+Transformers: A Fully-Enumerable Study"** ([arXiv:2607.04926](https://arxiv.org/abs/2607.04926)).
 
 MicroGround is a finite, fully-enumerable factored world for studying how the *input pathway*
 (symbolic tokens vs. a clean per-factor "oracle" code vs. entangled or one-hot perceptual codes)
@@ -9,6 +9,11 @@ affects compositional **binding** in ~6–10K-parameter transformers. Because th
 (128–729 states), every model is evaluated on the *entire* input space (zero sampling variance),
 every informative route is information-matched (exact Bayes ceiling = 1.0), and the full battery of
 probes and interventions is tractable.
+
+Related (different research question, same enumerable-world methodology):
+[otanl/grokking-microscope](https://github.com/otanl/grokking-microscope) asks what governs
+*grokking* and how fragile single-run grokking claims are; this repository asks how the *input
+pathway* shapes compositional binding.
 
 ## What's here
 
@@ -47,6 +52,17 @@ All headline numbers re-aggregate from the committed manifests in `results/mg/`.
 lists the exact command that produced each manifest (E1–E14). Trained model checkpoints are not
 committed (regenerable via the runner with `--save_dir`); the manifests contain the full per-epoch
 trajectories needed for every table and figure.
+
+## Citing this work
+
+```bibtex
+@article{ootani2026microground,
+  author  = {Ootani, Yoshiyuki},
+  title   = {Input Pathways Shape Few-Shot, Not Zero-Shot, Binding in Tiny Transformers: A Fully-Enumerable Study},
+  journal = {arXiv preprint arXiv:2607.04926},
+  year    = {2026}
+}
+```
 
 ## License
 
